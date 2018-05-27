@@ -1,11 +1,11 @@
-## Setup & Installation
+# Setup & Installation
 
-# Required
+## Required
 
 1. VirtualBox
 
   Download and install [VirtualBox](https://www.virtualbox.org/wiki/Downloads)
 
-1. Vagrant
+2. Vagrant
 
   Download and install [Vagrant](https://www.vagrantup.com/downloads.html)
