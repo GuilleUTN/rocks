@@ -12,3 +12,5 @@
 
 1. In the main folder repository run `vagrant up`
 2. To login in virtual machine run `vagrant ssh`
+
+You have a shared folder to `/home/vagrant/rocks` inside the virtual machine
