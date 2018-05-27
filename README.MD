@@ -8,9 +8,13 @@
 
   Download and install [Vagrant](https://www.vagrantup.com/downloads.html)
 
-## Setup
+## Setup Virual Machine
 
 1. In the main folder repository run `vagrant up`
 2. To login in virtual machine run `vagrant ssh`
 
 You have a shared folder to `/home/vagrant/rocks` inside the virtual machine
+
+## Setup MongoDB
+
+1.  Comming soon
