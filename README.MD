@@ -1,6 +1,4 @@
-# Setup & Installation
-
-## Required
+## Required software
 
 1. VirtualBox
 
@@ -9,3 +7,8 @@
 2. Vagrant
 
   Download and install [Vagrant](https://www.vagrantup.com/downloads.html)
+
+## Setup
+
+1. In the main folder repository run `vagrant up`
+2. To login in virtual machine run `vagrant ssh`
