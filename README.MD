@@ -18,3 +18,8 @@ You have a shared folder to `/home/vagrant/rocks` inside the virtual machine
 ## Setup MongoDB
 
 1.  Comming soon
+
+
+## Setup Python
+
+1.  Comming soon
