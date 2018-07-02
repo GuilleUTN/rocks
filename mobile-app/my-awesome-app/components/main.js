@@ -37,7 +37,7 @@ class Main extends Component {
            onPress={() => {
              this.props.mainActions.userLogin('guillermo');
            }}
-           title="Iniciar sesion en la App"
+           title="Iniciar sesion en la App Rocks"
          />
          <LoginButton
           publishPermissions={["email"]}
