@@ -1,15 +1,22 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
+import Main from './components/main';
+import { Provider } from "react-redux"
+import store from "./store/index"
 
 export default class App extends React.Component {
   render() {
     return (
-      <View style={styles.container}>
-        <Text>Open up src/App.js to start working on your app!</Text>
-      </View>
+      <Provider store={store}>
+        <View style={styles.container}>
+          <Main />
+        </View>
+      </Provider>
     );
   }
 }
+
+
 
 const styles = StyleSheet.create({
   container: {
