@@ -1,6 +1,6 @@
 import { combineReducers } from "redux"
-import main from "./main"
+import video from "./video"
 
 export default combineReducers({
-  main
+  video
 })
