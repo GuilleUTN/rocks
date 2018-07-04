@@ -1,12 +1,12 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
-import Main from './components/main.js';
-
 export default class App extends React.Component {
   render() {
     return (
-      <Main></Main>
+      <View style={styles.container}>
+        <Text>Open up src/App.js to start working on your app!</Text>
+      </View>
     );
   }
 }
