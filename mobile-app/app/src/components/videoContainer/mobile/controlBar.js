@@ -1,11 +1,13 @@
 import React, { Component } from 'react'
-import { StyleSheet, View, Dimensions } from 'react-native';
+import { StyleSheet, View, Dimensions, Slider } from 'react-native';
 import { MaterialIcons, Octicons } from '@expo/vector-icons';
 
 import { connect } from 'react-redux';
 import { bindActionCreators } from "redux";
 
 import * as videoActions from "../../../actions/video";
+import TimeLine from "./timeLine";
+
 
 const styles = StyleSheet.create({
   controlBar: {
@@ -15,6 +17,21 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     backgroundColor: "rgba(0, 0, 0, 0.5)",
     width:Dimensions.get('window').width
+  },
+  slide: {
+    flex: 10,
+  },
+  leftControls: {
+    flex: 5,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+  rigthControls: {
+    flex: 5,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center'
   }
 });
 
@@ -39,18 +56,28 @@ class ControlBar extends Component {
   render() {
       return (
         <View style={styles.controlBar}>
+        <View style={styles.rigthControls}>
+
+        <MaterialIcons
+          name={this.props.muted ? "volume-up" : "volume-mute"}
+          size={25}
+          color="white"
+          onPress={this.handleMuteOrUnmuted}
+        />
+        </View>
+
+          <View style={styles.slide}>
+          <TimeLine
+          ></TimeLine>
+          </View>
+          <View style={styles.leftControls}>
           <MaterialIcons
-            name={this.props.muted ? "volume-mute" : "volume-up"}
-            size={45}
-            color="white"
-            onPress={this.handleMuteOrUnmuted}
-          />
-          <MaterialIcons
-            name={!this.props.paused ? "pause" : "play-arrow"}
-            size={45}
+            name={this.props.paused ? "pause" : "play-arrow"}
+            size={20}
             color="white"
             onPress={this.handlePauseOrPlay}
           />
+          </View>
         </View>
       );
     }

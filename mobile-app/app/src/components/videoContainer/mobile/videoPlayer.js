@@ -11,8 +11,8 @@ class VideoPlayerMobile extends Component {
       const { width } = Dimensions.get('window');
       return (
                     <Video
-                      source={{ uri: this.props.uri }}
-                      shouldPlay={true}
+                      source={this.props.uri}
+                      shouldPlay={this.props.video.paused}
                       resizeMode="contain"
                       style={{ width, height: 300 }}
                       isMuted={this.props.video.muted}

@@ -7,6 +7,8 @@ import ControlBarWeb from './web/controlBar';
 import VideoPlayerMobile from './mobile/videoPlayer'
 import ControlBarMobile from './mobile/controlBar';
 
+const video = require('../../video/video.mp4')
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -30,10 +32,10 @@ class VideoContainer extends Component {
   }
   render() {
       if (Platform.OS==='web') {
-            player = <VideoPlayerWeb uri='http://d23dyxeqlo5psv.cloudfront.net/big_buck_bunny.mp4'/>;
+            player = <VideoPlayerWeb uri={video}/>;
             controlBar = <ControlBarWeb/>;
       } else {
-            player = <VideoPlayerMobile uri='http://d23dyxeqlo5psv.cloudfront.net/big_buck_bunny.mp4'/>;
+            player = <VideoPlayerMobile uri={video}/>;
             controlBar = <ControlBarMobile/>;
       }
       return (
