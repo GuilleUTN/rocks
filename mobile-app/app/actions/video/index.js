@@ -25,24 +25,11 @@ function update(status) {
     dispatch({ type: 'UPDATE_VIDEO', payload: status });
   };
 }
-function goTo(ref, time) {
-  return function(dispatch) {
-    ref.setPositionAsync(time).then(status => {
-      dispatch({ type: 'UPDATE_VIDEO', payload: status });
-    });
-  };
-}
-function setRef(ref) {
-  return function(dispatch) {
-    dispatch({ type: 'SET_REF', payload: ref });
-  };
-}
+
 module.exports = {
   pause,
   play,
   mute,
   unmute,
-  update,
-  goTo,
-  setRef
+  update
 };

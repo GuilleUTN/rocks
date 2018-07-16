@@ -31,9 +31,16 @@ const styles = StyleSheet.create({
 class VideoPlayer extends Component {
   constructor(props) {
     super(props);
+    this.ref = null;
   }
   statusUpdate = status => {
     this.props.videoActions.update(status);
+  };
+  goTo = (time, callback) => {
+    this.ref.setPositionAsync(time).then(status => {
+      this.props.videoActions.update(status);
+      callback();
+    });
   };
   render() {
     return (
@@ -41,7 +48,7 @@ class VideoPlayer extends Component {
         <View style={styles.videoView}>
           <Video
             ref={ref => {
-              this.props.videoActions.setRef(ref);
+              this.ref = ref;
             }}
             source={require('../../../video/video.mp4')}
             shouldPlay={!this.props.paused}
@@ -53,6 +60,9 @@ class VideoPlayer extends Component {
         </View>
         <BottomControls
           resetControlsTimeout={this.props.resetControlsTimeout}
+          goTo={(time, callback) => {
+            this.goTo(time, callback);
+          }}
         />
       </View>
     );

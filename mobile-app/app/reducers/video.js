@@ -1,9 +1,6 @@
 import { initialState } from '../store/initialState/video';
 export default function reducer(state = initialState, action) {
   switch (action.type) {
-    case 'SET_REF': {
-      return { ...state, ref: action.payload };
-    }
     case 'PAUSE_VIDEO': {
       return { ...state, paused: true };
     }

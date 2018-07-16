@@ -3,8 +3,7 @@ const initialState = {
   muted: false,
   durationMillis: 0,
   positionMillis: 0,
-  isLoading: false,
-  ref: null
+  isLoading: false
 };
 
 module.exports = {

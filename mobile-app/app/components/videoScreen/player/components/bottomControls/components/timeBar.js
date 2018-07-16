@@ -46,46 +46,33 @@ const styles = {
 class TimeBar extends Component {
   constructor(props) {
     super(props);
-    this.seekerWidth = 0;
-    this.seekerFillWidth = 0;
-    this.seekerOffset = 0;
-    this.seekerPosition = 0;
-    this.seeking = false;
-    this.seekPanResponder = PanResponder;
-    this.styles = { seekColor: { line: '#FFF', circle: '#FFF' } };
+    this.state = {
+      timeOffset: 0,
+      panResponder: null,
+      seeking: false,
+      seekerWidth: 0,
+      seekerColor: {
+        line: '#FFF',
+        circle: '#FFF'
+      }
+    };
+    this.styles = styles;
   }
-  calculateSeekerPosition() {
-    const percent = this.props.positionMillis / this.props.durationMillis;
-    const position = this.seekerWidth * percent;
-    return position;
-  }
-  setSeekerPosition(position = 0) {
-    position = this.constrainToSeekerMinMax(position);
-    this.seekerFillWidth = position;
-    this.seekerPosition = position;
-    if (!this.seeking) {
-      this.seekerOffset = position;
-    }
-  }
+  position = () => {
+    const time = this.props.positionMillis + this.state.timeOffset;
+    return (time * this.state.seekerWidth) / this.props.durationMillis;
+  };
+  time = dx => {
+    return (dx * this.props.durationMillis) / this.state.seekerWidth;
+  };
   componentWillMount() {
     this.initSeekPanResponder();
   }
-  constrainToSeekerMinMax(val = 0) {
-    if (val <= 0) {
-      return 0;
-    } else if (val >= this.seekerWidth) {
-      return this.seekerWidth;
-    }
-    return val;
-  }
-  calculateTimeFromSeekerPosition() {
-    const percent = this.seekerPosition / this.seekerWidth;
-    return this.props.durationMillis * percent;
-  }
   initSeekPanResponder() {
-    this.seekPanResponder = PanResponder.create({
+    const panResponder = PanResponder.create({
       // Ask to be the responder.
       onStartShouldSetPanResponder: (evt, gestureState) => {
+        this.props.resetControlsTimeout();
         return true;
       },
       onMoveShouldSetPanResponder: (evt, gestureState) => {
@@ -98,17 +85,27 @@ class TimeBar extends Component {
        * position in the onProgress listener.
        */
       onPanResponderGrant: (evt, gestureState) => {
-        this.props.resetControlsTimeout();
-        this.seeking = true;
-        this.styles.seekColor.circle = '#F6B';
+        this.setState(prevState => {
+          return {
+            seeking: true,
+            seekerColor: {
+              line: '#33a21c',
+              circle: '#33a21c'
+            }
+          };
+        });
       },
 
       /**
        * When panning, update the seekbar position, duh.
        */
       onPanResponderMove: (evt, gestureState) => {
-        const position = this.seekerOffset + gestureState.dx;
-        this.setSeekerPosition(position);
+        let time = this.time(gestureState.dx);
+        if (time + this.props.positionMillis < this.props.durationMillis) {
+          this.setState(prevState => {
+            return { timeOffset: time };
+          });
+        }
       },
 
       /**
@@ -117,49 +114,70 @@ class TimeBar extends Component {
        * onEnd callback
        */
       onPanResponderRelease: (evt, gestureState) => {
-        const time = this.calculateTimeFromSeekerPosition();
-        if (time >= this.props.durationMillis && !this.props.loading) {
-          this.seekTo(this.props.durationMillis);
-          this.props.videoActions.pause();
+        const time = this.props.positionMillis + this.time(gestureState.dx);
+        if (time < this.props.durationMillis) {
+          this.props.goTo(time, () => {
+            this.setState(prevState => {
+              return { timeOffset: 0 };
+            });
+          });
+          this.setState(prevState => {
+            return {
+              seeking: false,
+              seekerColor: {
+                line: '#FFF',
+                circle: '#FFF'
+              }
+            };
+          });
         } else {
-          this.props.videoActions.goTo(this.props.videoRef, time);
-          this.seeking = false;
+          this.props.goTo(this.props.durationMillis, () => {
+            this.setState(prevState => {
+              return { timeOffset: 0 };
+            });
+            this.props.videoActions.pause();
+          });
         }
       }
     });
+    this.setState(prevState => {
+      return { panResponder };
+    });
   }
   render() {
-    const position = this.calculateSeekerPosition();
-    this.setSeekerPosition(position);
+    const position = this.position();
     return (
       <View style={styles.seekbar.container}>
         <View
           style={styles.seekbar.track}
           onLayout={event => {
-            this.seekerWidth = event.nativeEvent.layout.width;
+            let width = event.nativeEvent.layout.width;
+            this.setState(prevState => {
+              return { seekerWidth: width };
+            });
           }}
         >
           <View
             style={[
               styles.seekbar.fill,
               {
-                width: this.seekerFillWidth,
+                width: position,
                 backgroundColor:
-                  this.props.seekColor || this.styles.seekColor.line
+                  this.props.seekColor || this.state.seekerColor.line
               }
             ]}
           />
         </View>
         <View
-          style={[styles.seekbar.handle, { left: this.seekerPosition }]}
-          {...this.seekPanResponder.panHandlers}
+          style={[styles.seekbar.handle, { left: position }]}
+          {...this.state.panResponder.panHandlers}
         >
           <View
             style={[
               styles.seekbar.circle,
               {
                 backgroundColor:
-                  this.props.seekColor || this.styles.seekColor.circle
+                  this.props.seekColor || this.state.seekerColor.circle
               }
             ]}
           />
@@ -173,8 +191,7 @@ function mapStateToProps(state) {
   return {
     positionMillis: state.video.positionMillis,
     durationMillis: state.video.durationMillis,
-    loading: state.video.isLoading,
-    videoRef: state.video.ref
+    loading: state.video.isLoading
   };
 }
 

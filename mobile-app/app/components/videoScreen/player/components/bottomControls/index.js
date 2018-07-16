@@ -53,6 +53,7 @@ class BottomControls extends Component {
             type={'current'}
           />
           <TimeBar
+            goTo={this.props.goTo}
             loading={false}
             resetControlsTimeout={this.props.resetControlsTimeout}
           />
