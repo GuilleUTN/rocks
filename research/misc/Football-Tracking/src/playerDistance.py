@@ -1,5 +1,5 @@
 import cv2
-import cv2.cv2 as cv
+import cv2 as cv
 import numpy as np
 import math
 import sideline as sl
@@ -80,13 +80,13 @@ def compute(playerList, video):
     width = int(cv.GetCaptureProperty(capture, cv.CV_CAP_PROP_FRAME_WIDTH))
     height = int(cv.GetCaptureProperty(capture, cv.CV_CAP_PROP_FRAME_HEIGHT))
 
-    # store the last frame 
-    preFrame = cv.CreateImage((width,height), 8, 1) 
+    # store the last frame
+    preFrame = cv.CreateImage((width,height), 8, 1)
     # store the current frame
-    curFrame = cv.CreateImage((width,height), 8, 1) 
+    curFrame = cv.CreateImage((width,height), 8, 1)
 
-    prePyr = cv.CreateImage((height / 3, width + 8), 8, cv.CV_8UC1) 
-    curPyr = cv.CreateImage((height / 3, width + 8), 8, cv.CV_8UC1) 
+    prePyr = cv.CreateImage((height / 3, width + 8), 8, cv.CV_8UC1)
+    curPyr = cv.CreateImage((height / 3, width + 8), 8, cv.CV_8UC1)
 
     numOfPlayers = len(playerList)
 
@@ -94,9 +94,9 @@ def compute(playerList, video):
     players = np.zeros(numOfPlayers)
 
     # store players position of last frame
-    prePlayers = playerList 
+    prePlayers = playerList
     # store players position of current frame
-    curPlayers = [] 
+    curPlayers = []
 
     img = cv.CreateImage((width,height), 8, 1)
 
@@ -110,15 +110,15 @@ def compute(playerList, video):
             cv.CvtColor(frame, img, cv.CV_BGR2GRAY)
             for i in range(numOfPlayers):
                 font=cv.InitFont(cv.CV_FONT_HERSHEY_SCRIPT_SIMPLEX, 0.4, 0.4, 0, 2, 3)
-                
+
                 cv.PutText(img, str(i), (int(prePlayers[i][0][0]), int(prePlayers[i][0][1])), font, (255,255,255))
             cv.SaveImage(playerInfo,img)
             flagInfo = False
 
-        
+
         #Convert to gray
-        cv.CvtColor(frame, curFrame, cv.CV_BGR2GRAY) 
-        
+        cv.CvtColor(frame, curFrame, cv.CV_BGR2GRAY)
+
         #Calculate the movement using the previous and the current frame using the previous points
         curPlayers, status, err = cv.CalcOpticalFlowPyrLK(preFrame, curFrame, prePyr, curPyr, prePlayers, (10, 10), 3, (cv.CV_TERMCRIT_ITER|cv.CV_TERMCRIT_EPS,20, 0.03), 0)
 
@@ -130,9 +130,9 @@ def compute(playerList, video):
 
         ###cv.ShowImage("test", temp)
         ###cv2.waitKey(20)
-        
-        #Put the current frame preFrame 
-        cv.Copy(curFrame, preFrame) 
+
+        #Put the current frame preFrame
+        cv.Copy(curFrame, preFrame)
         prePlayers = curPlayers
     ###cv2.destroyAllWindows()
     # print distance
@@ -144,4 +144,3 @@ def compute(playerList, video):
         f.write("player" + str(i) +" running distance: " + str(player) + "meters\n")
 
 ###compute(fakePlayer(), videoName)
-

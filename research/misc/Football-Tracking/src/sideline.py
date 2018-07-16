@@ -1,5 +1,5 @@
 import cv2
-import cv2.cv2 as cv
+import cv2 as cv
 import numpy as np
 
 videoName = '..//vid//OUTFILE-3.mp4' # video
@@ -78,7 +78,7 @@ def drawRightLine(point, lu, ll, ru, rl):
     x2 = getX(y2)
     return x1, y1, x2, y2
 
-#if player is outside, draw a line at the corresponding sideline. 
+#if player is outside, draw a line at the corresponding sideline.
 #If player is outside a corner, treat it as a point outside the upper/ lower sideline
 def checkOutSide(frame, point, lu, ll, ru, rl):
     flag = False

@@ -10,9 +10,9 @@ import playerDistance
 import matplotlib.path as path
 import drawoffside
 
-bg_filpath = '..//img//side-view.jpg'
-vid_filepath = '..//vid//OUTFILE-3.mp4'
-writeVedioName = '..//vid//offside.avi'
+bg_filpath = '../img/side-view.jpg'
+vid_filepath = '../vid/OUTFILE-3.mp4'
+writeVedioName = '../vid/offside.avi'
 
 def track_player(hg_matrix):
 	bg_img = cv2.imread(bg_filpath)
@@ -30,36 +30,36 @@ def track_player(hg_matrix):
 	first_player_pos = list()
 	firstFrame = True
 	while True:
-        
+
 		aval, img = vid_cap.read()
 		if not aval:
 			break
 
 		gray_img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 
-		#xsize, ysize = gray_img.shape # mods Juli     
+		#xsize, ysize = gray_img.shape # mods Juli
 		#resized = cv2.resize(gray_bg_img,(ysize,xsize)) #
 
 		bg_delta = cv2.absdiff(gray_bg_img, gray_img)
-        
-		#cv2.imwrite("image.jpg",bg_delta)   
-        
+
+		#cv2.imwrite("image.jpg",bg_delta)
+
 
 		threshold = cv2.threshold(bg_delta, 30, 255, cv2.THRESH_BINARY)[1]
 		threshold = cv2.dilate(threshold, None, iterations=3)
-        
+
 		im2, contours, hierarchy = cv2.findContours(threshold.copy(),cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 		#contours, _ = cv2.findContours(threshold.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)[-2:] # mods Juli
-    
+
 		players_pos = list()
-		
-		c = 0 
-		
+
+		c = 0
+
 		for cn in contours:
 			ch_player = 'u'
 			(x, y, w, h) = cv2.boundingRect(cn)
 			feet_coord = [float(x + int(w/2.0)), float(y + h)]
-			
+
 			rect_area = cv2.contourArea(cn)
 			if(not fieldPolygon.contains_point((feet_coord[0], feet_coord[1]))):
 				continue
@@ -67,7 +67,7 @@ def track_player(hg_matrix):
 			if(y > frame_height/4):
 				if(rect_area < 40):
 					continue
-			
+
 			if(w > h*1.4 or rect_area < 10):
 				continue
 
@@ -94,14 +94,14 @@ def track_player(hg_matrix):
 			first_player_pos = list(players_pos)
 			firstFrame = False
 		top_img, player_top_points = topview.create_topview(hg_matrix, players_pos)
-		
+
 		img = drawoffside.draw(img, player_top_points)
 		img = cv2.resize(img,(0,0),fx=0.6,fy=0.6)
 		cv2.imshow("Player detection", img)
 		cv2.imshow("Top image", top_img)
 		cv2.moveWindow("Top image", 0, 300)
 		key = cv2.waitKey(1) & 0xFF
-        
+
 	# playerDistance.compute(first_player_pos, vid_filepath) # Will compute player distance but was not tested and might cause problems
 	# Left commented
 	vid_cap.release()
